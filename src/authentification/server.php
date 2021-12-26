@@ -30,7 +30,6 @@ if (isset($_POST['reg_user'])) {
   $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
   $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
 
-  // form validation: ensure that the form is correctly filled ...
   // Vérifier si les champs sont remplis + vérif mdp confirmation
   if (empty($username) OR empty($password_1) OR empty($password_2) OR empty($email)) { 
     echo "Tous les champs ne sont pas rempli !"; 
@@ -75,10 +74,10 @@ if (isset($_POST['login_user'])) {
   $password = mysqli_real_escape_string($db, $_POST['password']);
 
   if (empty($username)) {
-  	array_push($errors, "Username is required");
+  	array_push($errors, "Un utilisateur est requis");
   }
   if (empty($password)) {
-  	array_push($errors, "Password is required");
+  	array_push($errors, "Un mot de passe est requis");
   }
 
   if (count($errors) == 0) {
@@ -87,10 +86,10 @@ if (isset($_POST['login_user'])) {
   	$results = mysqli_query($db, $query);
   	if (mysqli_num_rows($results) == 1) {
   	  $_SESSION['username'] = $username;
-  	  $_SESSION['success'] = "You are now logged in";
+  	  $_SESSION['success'] = "Vous êtes maintenant connectés.";
   	  header('location: index.php');
   	}else {
-  		array_push($errors, "Wrong username/password combination");
+  		array_push($errors, "Mauvaise combinaison username/mot de passe");
   	}
   }
 }
@@ -113,7 +112,7 @@ if (isSet($_POST['createThread'])) {
 
     $q = mysqli_query($db, "INSERT INTO `articles` VALUES ('', '$title', '$description', '$date', '$user')") or die(mysqli_error($db));
     if ($q) { 
-      echo 'Thread created.';
+      echo 'Articlé crée.';
       header('location: ../index.php');
     }else
       echo 'Echec de la création de l\'article.';

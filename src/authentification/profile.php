@@ -14,34 +14,42 @@ $userPasswd = $user['Password'];
 $userName = $user['Username'];
 
 if (isset($_POST['edit'])) {
-    $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
-    $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
-    
-    if ($password_1 != $password_2) {
-      $error = "Les mots de passe doivent correspondre.";
-    }
-    if ($password_1 == $userPasswd) {
-      $error = "Votre mot de passe ne doit pas être le même que l'ancien.";
-    }
-    if ($password_1 == $password_2) {
-      $db->query("UPDATE `users` SET `Password` = '.$password_1.' WHERE 'Username' = '.$sessionName.'");
-    }
+  $newUser = mysqli_real_escape_string($db, $_POST['Pseudo_2']);
+  $newEmail = mysqli_real_escape_string($db, $_POST['Email_2']);
+  $newPass1 = mysqli_real_escape_string($db, $_POST['password_1']);
+  $newPass2 = mysqli_real_escape_string($db, $_POST['password_2']);
+
+  if (!empty($newUser)) {
+    $db->query("UPDATE users SET Username = '".$newUser."' WHERE Username = '".$sessionName."'");
+    $_SESSION['username'] = $newUser;
+    header('Location:profile.php');
+  }
+
+  if ($newPass1 != $newPass2) {
+    echo "Les mots de passe doivent correspondre.";
+  }
+  if ($newPass1 == $userPasswd) {
+    echo "Votre mot de passe ne doit pas être le même que l'ancien.";
+  }
+  if ($newPass1 == $newPass2) {
+    $db->query("UPDATE `users` SET `Password` = '.$newPass1.' WHERE 'Username' = '.$sessionName.'");
+  }
 }
 
 ?>
 
 <html>
   <head>
-      <title>Profil</title>
-      <meta charset="utf-8">
-      <link rel="stylesheet" href="../css/login.css" media="screen" type="text/css" />
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Profil</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/login.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
-  <body>
+  <body style="text-align:center; position:center;">
     <!-- Redirection à l'accueil -->
-    <a href="../index.php">Retourner à l'accueil</a>
-    <div class="card" style="width: 18rem;">
-      <img class="card-img-top" src="./img" alt="Image de profil">
+    <a href="../index.php" style="background-color: white;">Retourner à l'accueil</a>
+    <div class="card" style="width: 18rem; margin-left:620px;">
+      <img class="card-img-top" src="../img/pfp.png" alt="Image de profil">
       <div class="card-body">
         <h5 class="card-title">Votre Profil</h5>
         <p class="card-text">Vous pouvez consulter et modifier vos informations de compte dans cette section</p>
@@ -60,8 +68,10 @@ if (isset($_POST['edit'])) {
         </form>
       </div>
       <?php echo $error?>
-    </div>
-    <div>
+    </div><br><br>
+    <h2 style="text-align: center; color:white"> Vos posts </h2>
+    <hr>
+    <div style="margin-left:200px; margin-right:200px">
       <?php
       $sessionUser = $_SESSION['username'];
         $query = mysqli_query($db, "SELECT * FROM `articles` WHERE Username = '$sessionUser' ORDER BY Date DESC");
@@ -78,7 +88,7 @@ if (isset($_POST['edit'])) {
                 $content .= $a[$i];
               }
             }
-            echo '<tr><td>'.'Auteur : '.$auteur.' | Titre : '.$row["Titre"].' | Date du sujet : '.$date.'</td><td>'.' | Contenu du post : '.$content.'<form method="POST"> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr>';
+            echo '<form method="POST"> <tr><td>'.'Auteur : '.$auteur.' - '.$date.'</td><td>'.' <br> Titre : '.$row["Titre"].' <br> Contenu du post : '.$content.' <br> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr>';
             if (isset($_POST['supprimer'])) {
               $query = mysqli_query($db, "DELETE FROM `articles` WHERE Id = .$id.");
             }

@@ -3,13 +3,14 @@ include('./authentification/server.php');
 
 // Affichage des boutons connexion et déconnexion + message pour informer l'utilisateur s'il est connecté ou non
 if(!empty($_SESSION['username'])){
-	echo "Information de connexion --> ";
+	echo "Information de session --> ";
 	echo "Vous êtes connecté en tant que ".'"'.$_SESSION['username'].'"';
 	$conn = "";
 	$deco = "Déconnexion";
 	$display = "";
 	$register = "";
 	$profil = "Profil";
+	$newThread = "Créer un article";
 } else {
 	echo "Information de connexion --> ";
 	echo "Vous n'êtes pas connectés !";
@@ -18,6 +19,7 @@ if(!empty($_SESSION['username'])){
 	$display = "display: none;";
 	$register = "Inscription";
 	$profil = '';
+	$newThread = "";
 }
 
 ?>
@@ -27,23 +29,28 @@ if(!empty($_SESSION['username'])){
 <head>
 	<title>Forum PHP</title>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+	<link rel="stylesheet" href="./css/index.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-	<h1>Forum PHP - Mathis, Yrlan et Paul-Antoine</h1>
+	<h1 style="text-align:center; color:white">Forum PHP - Mathis, Yrlan et Paul-Antoine</h1>
+	<hr>
 	<!-- Boutons -->
-	<a href="./authentification/register.php"><?php echo $register; ?></a>
-    <a href="./authentification/login.php"><?php echo $conn; ?></a>
-	<a href="./authentification/deconnect.php"><?php echo $deco; ?></a>
-	<a href="./authentification/profile.php"><?php echo $profil; ?></a>
+	<div style="background-color: white;">
+		<a id="button-index"  style="margin-left:300px"href="./authentification/register.php"><?php echo $register; ?></a>
+		<a id="button-index" href="./authentification/login.php"><?php echo $conn; ?></a>
+		<a id="button-index" href="./articles/create_post.php"><?php echo $newThread; ?></a>
+		<a id="button-index" href="./authentification/profile.php"><?php echo $profil; ?></a>
+		<a id="button-index" href="./authentification/deconnect.php"><?php echo $deco; ?></a>
+	</div>
+
+
+	<hr>
 	<!-- Articles -->
-    <h1>Articles</h1>
-	<!-- Nouvel article -->
-	<h2>Créer un article :</h1>
-	<a href="./articles/create_post.php">Créer</a>
-	<!-- Liste des articles -->
-	<h2>Liste des articles :</h1>
-    <table>
-        <tbody>
+    <h1 style="text-align: center; color:white">Articles</h1>
+	<hr><br>
+	<div class="card" style="text-align: center; width:1000px; margin: 0 auto;">
+	<div class="card-body" style="position: center">
 		<?php
 			$query = mysqli_query($db, "SELECT * FROM `articles` ORDER BY Date DESC");
 			if (mysqli_num_rows($query) > 0) {
@@ -59,7 +66,7 @@ if(!empty($_SESSION['username'])){
 							$content .= $a[$i];
 						}
 					}
-					echo '<tr><td>'.'Auteur : '.$auteur.' | Titre : '.$row["Titre"].' | Date du sujet : '.$date.'</td><td>'.' | Contenu du post : '.$content.'<form method="POST"> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr>';
+					echo '<form method="POST" class="card-body"> <tr><td>'.'<h7> Auteur : '.$auteur.' - '.$date.'</h7></td><td>'.' <br><h5> Titre : '.$row["Titre"].' </h5><br> Contenu du post : '.$content.' <br><br> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr><hr>';
 					if (isset($_POST['supprimer'])) {
 						$query = mysqli_query($db, "DELETE FROM `articles` WHERE Id = .$id.");
 					}
@@ -68,8 +75,7 @@ if(!empty($_SESSION['username'])){
 				echo '<tr><td>Aucun sujets trouvés ! :(</tr></td>';
 			}
 		?>
-		</tbody>
-    </table>
-	
+		</div>
+	</div>
 </body>
 </html>
