@@ -11,6 +11,11 @@ if(!empty($_SESSION['username'])){
 	$register = "";
 	$profil = "Profil";
 	$newThread = "Créer un article";
+	if($_SESSION['username'] == 'admin') {
+		$admin = 'Administration';
+	} else {
+		$admin = '';
+	}
 } else {
 	echo "Information de connexion --> ";
 	echo "Vous n'êtes pas connectés !";
@@ -20,8 +25,8 @@ if(!empty($_SESSION['username'])){
 	$register = "Inscription";
 	$profil = '';
 	$newThread = "";
+	$admin = '';
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +47,7 @@ if(!empty($_SESSION['username'])){
 		<a id="button-index" href="./articles/create_post.php"><?php echo $newThread; ?></a>
 		<a id="button-index" href="./authentification/profile.php"><?php echo $profil; ?></a>
 		<a id="button-index" href="./authentification/deconnect.php"><?php echo $deco; ?></a>
+		<a id="button-index" href="./authentification/admin.php"><?php echo $admin; ?></a>
 	</div>
 
 
@@ -59,6 +65,7 @@ if(!empty($_SESSION['username'])){
 					$date = $row['Date'];
 					$auteur = $row['Username'];
 					$id = $row['Id'];
+					$actualTitle = $row['Titre'];
 					if (strlen($content) > 100) {
 						$a = $content;
 						$content = '';
@@ -67,12 +74,17 @@ if(!empty($_SESSION['username'])){
 						}
 					}
 					echo '<form method="POST" class="card-body"> <tr><td>'.'<h7> Auteur : '.$auteur.' - '.$date.'</h7></td><td>'.' <br><h5> Titre : '.$row["Titre"].' </h5><br> Contenu du post : '.$content.' <br><br> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr><hr>';
+					if (isset($_POST['modifier'])) {
+						header('location:./articles/edit_post.php');
+					}
+					
 					if (isset($_POST['supprimer'])) {
-						$query = mysqli_query($db, "DELETE FROM `articles` WHERE Id = .$id.");
+						$query = mysqli_query($db, "DELETE FROM articles WHERE Id = '".$id."'");
+						header('location:index.php');
 					}
 				}
 			} else{
-				echo '<tr><td>Aucun sujets trouvés ! :(</tr></td>';
+				echo '<tr><td>Aucun sujet trouvé ! :(</tr></td>';
 			}
 		?>
 		</div>

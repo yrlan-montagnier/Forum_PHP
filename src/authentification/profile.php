@@ -18,6 +18,7 @@ if (isset($_POST['edit'])) {
   $newEmail = mysqli_real_escape_string($db, $_POST['Email_2']);
   $newPass1 = mysqli_real_escape_string($db, $_POST['password_1']);
   $newPass2 = mysqli_real_escape_string($db, $_POST['password_2']);
+  $updatedPass = md5($newPass1);
 
   if (!empty($newUser)) {
     $db->query("UPDATE users SET Username = '".$newUser."' WHERE Username = '".$sessionName."'");
@@ -25,16 +26,29 @@ if (isset($_POST['edit'])) {
     header('Location:profile.php');
   }
 
-  if ($newPass1 != $newPass2) {
-    echo "Les mots de passe doivent correspondre.";
+  if (!empty($newEmail)) {
+    $db->query("UPDATE users SET Mail = '".$newEmail."' WHERE Username = '".$sessionName."'");
+    header('Location:profile.php');
   }
-  if ($newPass1 == $userPasswd) {
-    echo "Votre mot de passe ne doit pas être le même que l'ancien.";
+
+  if (!empty($newPass1 && !empty($newPass2))) {
+    if ($newPass1 != $newPass2) {
+      echo "Les mots de passe doivent correspondre.";
+    }
+
+    if ($newPass1 == $userPasswd) {
+      echo "Votre mot de passe ne doit pas être le même que l'ancien.";
+    }  
+  
+    if ($newPass1 == $newPass2) {
+      $db->query("UPDATE users SET Password = '".$updatedPass."' WHERE Username = '".$sessionName."'");
+      header('Location:profile.php');
+    }
   }
-  if ($newPass1 == $newPass2) {
-    $db->query("UPDATE `users` SET `Password` = '.$newPass1.' WHERE 'Username' = '.$sessionName.'");
-  }
-}
+  if ($sessionName == 'admin') {
+    $pfp = "../img/pfp2.png";
+  } else $pfp = "../img/pfp.png";
+} 
 
 ?>
 
@@ -49,7 +63,7 @@ if (isset($_POST['edit'])) {
     <!-- Redirection à l'accueil -->
     <a href="../index.php" style="background-color: white;">Retourner à l'accueil</a>
     <div class="card" style="width: 18rem; margin-left:620px;">
-      <img class="card-img-top" src="../img/pfp.png" alt="Image de profil">
+      <img class="card-img-top" src=<?php $pfp ?> alt="Image de profil">
       <div class="card-body">
         <h5 class="card-title">Votre Profil</h5>
         <p class="card-text">Vous pouvez consulter et modifier vos informations de compte dans cette section</p>
