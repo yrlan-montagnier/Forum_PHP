@@ -31,7 +31,6 @@ if (isset($_POST['reg_user'])) {
   $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
 
   // form validation: ensure that the form is correctly filled ...
-  // by adding (array_push()) corresponding error unto $errors array
   // Vérifier si les champs sont remplis + vérif mdp confirmation
   if (empty($username) OR empty($password_1) OR empty($password_2) OR empty($email)) { 
     echo "Tous les champs ne sont pas rempli !"; 
@@ -109,22 +108,14 @@ if (isSet($_POST['createThread'])) {
   if (isSet($_POST['title']) && $_POST['title'] != '' && isSet($_POST['description']) && $_POST['description'] != '' && isSet($_SESSION['username']) && $_SESSION['username'] != '') {
     $title = $_POST['title'];
     $description = $_POST['description'];
-    $date =  date('Y.m.d');
+    $date =  date('d.m.Y H:i:s');
     $user = $_SESSION['username'];
 
     $q = mysqli_query($db, "INSERT INTO `articles` VALUES ('', '$title', '$description', '$date', '$user')") or die(mysqli_error($db));
     if ($q) { 
-      echo 'Thread created.'; 
+      echo 'Thread created.';
+      header('location: ../index.php');
     }else
-      echo 'Failed to create thread.';
+      echo 'Echec de la création de l\'article.';
   }
 }
-
-// *********************************** Liste des posts ***********************************
-
-$query = mysqli_query($db, "SELECT * FROM `articles`");
-$articles = mysqli_fetch_assoc($query);
-$articleUser = $articles['Username'];
-$articleTitle = $articles['Titre'];
-$articleContent = $articles['Contenu'];
-$articleDate = $articles['Date'];

@@ -42,5 +42,5 @@ else
 {
    header('Location: login.php');
 }
-mysqli_close($db); // fermer la connexion
+mysqli_close($db);
 ?>
