@@ -73,15 +73,7 @@ if(!empty($_SESSION['username'])){
 							$content .= $a[$i];
 						}
 					}
-					echo '<form method="POST" class="card-body"> <tr><td>'.'<h7> Auteur : '.$auteur.' - '.$date.'</h7></td><td>'.' <br><h5> Titre : '.$row["Titre"].' </h5><br> Contenu du post : '.$content.' <br><br> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr><hr>';
-					if (isset($_POST['modifier'])) {
-						header('location:./articles/edit_post.php');
-					}
-					
-					if (isset($_POST['supprimer'])) {
-						$query = mysqli_query($db, "DELETE FROM articles WHERE Id = '".$id."'");
-						header('location:index.php');
-					}
+					echo '<form method="POST" class="card-body"> <tr><td>'.'<h7> Auteur : '.$auteur.' - '.$date.'</h7></td><td>'.' <br><h5> Titre : '.$row["Titre"].' </h5><br> Contenu du post : '.$content.' <br><br>  '.' </td></tr><hr>';
 				}
 			} else{
 				echo '<tr><td>Aucun sujet trouvé ! :(</tr></td>';

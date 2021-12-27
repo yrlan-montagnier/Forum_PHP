@@ -13,6 +13,10 @@ $userEmail = $user['Mail'];
 $userPasswd = $user['Password'];
 $userName = $user['Username'];
 
+if ($sessionName == 'admin') {
+  $pfp = '"./img/pfp2.png"';
+} else $pfp = '"./img/pfp.png"';;
+
 if (isset($_POST['edit'])) {
   $newUser = mysqli_real_escape_string($db, $_POST['Pseudo_2']);
   $newEmail = mysqli_real_escape_string($db, $_POST['Email_2']);
@@ -45,9 +49,6 @@ if (isset($_POST['edit'])) {
       header('Location:profile.php');
     }
   }
-  if ($sessionName == 'admin') {
-    $pfp = "../img/pfp2.png";
-  } else $pfp = "../img/pfp.png";
 } 
 
 ?>
@@ -63,7 +64,7 @@ if (isset($_POST['edit'])) {
     <!-- Redirection à l'accueil -->
     <a href="../index.php" style="background-color: white;">Retourner à l'accueil</a>
     <div class="card" style="width: 18rem; margin-left:620px;">
-      <img class="card-img-top" src=<?php $pfp ?> alt="Image de profil">
+      <img class="card-img-top" src="./img/pfp.png" alt="Image de profil">
       <div class="card-body">
         <h5 class="card-title">Votre Profil</h5>
         <p class="card-text">Vous pouvez consulter et modifier vos informations de compte dans cette section</p>
@@ -102,10 +103,23 @@ if (isset($_POST['edit'])) {
                 $content .= $a[$i];
               }
             }
-            echo '<form method="POST"> <tr><td>'.'Auteur : '.$auteur.' - '.$date.'</td><td>'.' <br> Titre : '.$row["Titre"].' <br> Contenu du post : '.$content.' <br> <button name="modifier">Modifier</button> '.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr>';
+            echo '<form method="POST"> <tr><td>'.'Auteur : '.$auteur.' - '.$date.'</td><td>'.' <br> Titre : '.$row["Titre"].' <br> Contenu du post : '.$content.' <br> <button name="modifier">Modifier</button> '.'<input name="newTitle" placeholder="Nouveau titre"></input>'.'<input name="newContent" placeholder="Nouveau contenu"></input><br>'.'<form method="POST"><button name="supprimer">Supprimer</button></form>'.' </td></tr>';
             if (isset($_POST['supprimer'])) {
-              $query = mysqli_query($db, "DELETE FROM `articles` WHERE Id = .$id.");
+              $query = mysqli_query($db, "DELETE FROM articles WHERE Id = '".$id."'");
+              header('location:profile.php');
             }
+            if (isset($_POST['modifier'])) {
+              $newTitle = mysqli_real_escape_string($db, $_POST['newTitle']);;
+              $newContent = mysqli_real_escape_string($db, $_POST['newContent']);;
+              if(!empty($_POST['newContent'])) {
+                $updateContent = mysqli_query($db, "UPDATE articles SET Contenu = '".$newContent."' WHERE Id = '".$id."'");
+                header('location:../authentification/profile.php');
+              }
+              if(!empty($_POST['newTitle'])) {
+                $updateTitle = mysqli_query($db, "UPDATE articles SET Titre = '".$newTitle."' WHERE Id = '".$id."'");
+                header('location:../authentification/profile.php');  
+              }
+            }          
           }
         } else{
           echo '<tr><td>Aucun sujets trouvés ! :(</tr></td>';
