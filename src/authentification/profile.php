@@ -14,8 +14,8 @@ $userPasswd = $user['Password'];
 $userName = $user['Username'];
 
 if ($sessionName == 'admin') {
-  $pfp = '"./img/pfp2.png"';
-} else $pfp = '"./img/pfp.png"';;
+  $pfp = "../img/pfp2.png";
+} else $pfp = "../img/pfp.png";
 
 if (isset($_POST['edit'])) {
   $newUser = mysqli_real_escape_string($db, $_POST['Pseudo_2']);
@@ -25,9 +25,13 @@ if (isset($_POST['edit'])) {
   $updatedPass = md5($newPass1);
 
   if (!empty($newUser)) {
-    $db->query("UPDATE users SET Username = '".$newUser."' WHERE Username = '".$sessionName."'");
-    $_SESSION['username'] = $newUser;
-    header('Location:profile.php');
+    if ($newUser == $userName) {
+      $db->query("UPDATE users SET Username = '".$newUser."' WHERE Username = '".$sessionName."'");
+      $_SESSION['username'] = $newUser;
+      header('Location:profile.php');  
+    } else {
+      echo "Nom d'utilisateur déjà utilisé";
+    }
   }
 
   if (!empty($newEmail)) {
@@ -64,7 +68,7 @@ if (isset($_POST['edit'])) {
     <!-- Redirection à l'accueil -->
     <a href="../index.php" style="background-color: white;">Retourner à l'accueil</a>
     <div class="card" style="width: 18rem; margin-left:620px;">
-      <img class="card-img-top" src="./img/pfp.png" alt="Image de profil">
+      <img class="card-img-top" src="<?php echo $pfp ?>" alt="Image de profil">
       <div class="card-body">
         <h5 class="card-title">Votre Profil</h5>
         <p class="card-text">Vous pouvez consulter et modifier vos informations de compte dans cette section</p>
@@ -111,11 +115,11 @@ if (isset($_POST['edit'])) {
             if (isset($_POST['modifier'])) {
               $newTitle = mysqli_real_escape_string($db, $_POST['newTitle']);;
               $newContent = mysqli_real_escape_string($db, $_POST['newContent']);;
-              if(!empty($_POST['newContent'])) {
+              if(!empty($newContent)) {
                 $updateContent = mysqli_query($db, "UPDATE articles SET Contenu = '".$newContent."' WHERE Id = '".$id."'");
                 header('location:../authentification/profile.php');
               }
-              if(!empty($_POST['newTitle'])) {
+              if(!empty($newTitle)) {
                 $updateTitle = mysqli_query($db, "UPDATE articles SET Titre = '".$newTitle."' WHERE Id = '".$id."'");
                 header('location:../authentification/profile.php');  
               }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 26 déc. 2021 à 23:56
+-- Généré le : lun. 27 déc. 2021 à 02:24
 -- Version du serveur : 10.4.22-MariaDB
 -- Version de PHP : 8.0.13
 
@@ -35,14 +35,6 @@ CREATE TABLE `articles` (
   `Username` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Déchargement des données de la table `articles`
---
-
-INSERT INTO `articles` (`Id`, `Titre`, `Contenu`, `Date`, `Username`) VALUES
-(14, 'Test 1', 'Contenu du sujet', '26.12.2021 19:59:02', 'a'),
-(16, 'Sujet 3', 'Contenu du 3ème sujet', '26.12.2021 20:17:58', 'b');
-
 -- --------------------------------------------------------
 
 --
@@ -61,8 +53,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `Username`, `Password`, `Mail`) VALUES
-(25, 'a', '0cc175b9c0f1b6a831c399e269772661', 'a@a.com'),
-(26, 'b', '92eb5ffee6ae2fec3ad71c777531578f', 'petewo8194@ehstock.com');
+(35, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@mail.com');
 
 --
 -- Index pour les tables déchargées
@@ -78,7 +69,9 @@ ALTER TABLE `articles`
 -- Index pour la table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD UNIQUE KEY `Username` (`Username`),
+  ADD UNIQUE KEY `Mail` (`Mail`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -88,13 +81,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `Id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `Id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `Id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

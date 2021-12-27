@@ -30,42 +30,40 @@ if (isset($_POST['reg_user'])) {
   $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
   $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
 
-  // Vérifier si les champs sont remplis + vérif mdp confirmation
-  if (empty($username) OR empty($password_1) OR empty($password_2) OR empty($email)) { 
-    echo "Tous les champs ne sont pas rempli !"; 
-  } elseif($password_1 != $password_2) {
-    echo "Les mots de passe ne correspondent pas !"; 
-  } 
-
-  // On vérifie dans la base de données si
-  // Un utilisateur existe déjà avec le même username ou mail
   $user_check_query = "SELECT * FROM users WHERE Username='$username' OR Mail='$email' LIMIT 1";
   $result = mysqli_query($db, $user_check_query);
   $user = mysqli_fetch_assoc($result);
 
-  if (!$user) { 
-    if ($user['username'] === $username) {
-      echo "Pseudo déjà utilisé !";
-    }
-    if($user['email'] === $email) {
-        echo "Cet adresse mail est déjà utilisée !";
-    } 
-    else {
-      // Pour finir, on compte le nombre d'erreurs dans le formulaires
-      // Puis on inscrit l'utilisateur dans la base de données s'il n'y en a pas.
-      if (count($errors) == 0) {
-        // On chiffre le mot de passe avant de l'enregistrer dans la base de données
-        $password = md5($password_1);
-        // On prépare puis on éxécute une requète pour insèrer les champs + le pwd chiffré dans la base de données
-        $query = "INSERT INTO users (Username, Password, Mail ) VALUES('$username', '$password', '$email')";
-        mysqli_query($db, $query);
-      
-        $_SESSION['username'] = $username;
-        $_SESSION['success'] = "Vous êtes maintenant connectés !";
-        header('location: ../index.php');
+  // Vérifier si les champs sont remplis + vérif mdp confirmation
+  if (empty($username) OR empty($password_1) OR empty($password_2) OR empty($email)) { 
+    echo "Tous les champs ne sont pas rempli !"; 
+  } elseif ($password_1 != $password_2) {
+    echo "Les mots de passe ne correspondent pas !"; 
+  } else {
+    if (!$user) { 
+      if ($user['username'] === $username) {
+        echo "Pseudo déjà utilisé !";
       }
-    }
+      if($user['email'] === $email) {
+          echo "Cet adresse mail est déjà utilisée !";
+      } 
+      else {
+          // On chiffre le mot de passe avant de l'enregistrer dans la base de données
+          $password = md5($password_1);
+          // On prépare puis on éxécute une requète pour insèrer le contenu des champs + le pwd chiffré dans la base de données
+          $query = "INSERT INTO users (Username, Password, Mail ) VALUES('$username', '$password', '$email')";
+          mysqli_query($db, $query);
+        
+          $_SESSION['username'] = $username;
+          $_SESSION['success'] = "Vous êtes maintenant connectés !";
+          header('location: ../index.php');
+        }
+      }  
   }
+
+  // On vérifie dans la base de données si
+  // Un utilisateur existe déjà avec le même username ou mail
+
 }
 
 // LOGIN USER

@@ -22,7 +22,7 @@
   	</div>
 	<!-- Mail -->
   	<div class="input-group">
-		<label>Email :</label>
+		<label>Email :<br></label>
 		<input type="email" name="email" value="<?php echo $email; ?>">
   	</div>
 	<!-- Mot de passe -->
@@ -38,9 +38,13 @@
 	<!-- Bouton d'inscription -->
   	<div class="input-group">
 		<button type="submit" class="btn" name="reg_user">Inscription</button>
-  	</div>
-	<!-- Redirection vers la page login -->
-  	<p>Vous avez déja un compte? : <a href="login.php">Se connecter !</a> </p>
+		<!-- Redirection vers la page login -->
+		<p>Vous avez déja un compte? : <a href="login.php">Se connecter !</a> </p>
   	</form>
+	<!-- Redirection vers la page login -->
+	<p> Vous n'êtes pas inscrits? <a href="register.php">S'inscrire !</a></p>
+	<a href="password_forgot.php"> Mot de passe oublié ?</a>
+  	</div>
+
 </body>
 </html>
